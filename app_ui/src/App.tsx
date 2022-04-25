@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
 function App() {
+  const [test,setTest] = useState(1)
+
+
   return (
     <div className="App">
       <header className="App-header">
@@ -18,6 +21,12 @@ function App() {
         >
           Learn React
         </a>
+        <div>
+          {test}
+          <button onClick={()=>setTest(test+1) } > +1 </button>
+        </div>
+
+      
       </header>
     </div>
   );

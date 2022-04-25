@@ -11,3 +11,11 @@ python manage.py startapp app_1
 Пересобираем проект после изменений
 npm run build
 python manage.py collectstatic
+
+настраиваем CustomUser и только потом
+python manage.py makemigrations
+python manage.py migrate 
+
+python manage.py createsuperuser
+(admin@mail.ru | admin)
+user1@mail.ru | user1admin ....
