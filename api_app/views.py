@@ -34,10 +34,10 @@ def authenticateApi(request):
     try:
         user = CustomUser.objects.get(id=session_user_id)
         serializer = AuthUserSerializer(user)
-        return JsonResponse({'data':serializer.data, 'resultCode': 0})
+        return JsonResponse({'data':serializer.data, 'resultCode': 0, 'messages': 'Success'})
 
     except CustomUser.DoesNotExist:
-        return JsonResponse({'messages': 'You are not athorized', 'resultCode': 1})
+        return JsonResponse({ 'data':{}, 'resultCode': 1, 'messages':'You are not athorized'})
 
 
 

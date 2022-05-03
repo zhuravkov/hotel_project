@@ -1,35 +1,25 @@
-import React, { useEffect, useState } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react'
 
-function App() {
-  const [test,setTest] = useState(1)
+import { useAppDispatch, useAppSelector } from './hooks/appHooks'
+import { authUserThunk } from './redux/authReduser'
 
 
+const App = () => {
+  // The `state` arg is correctly typed as `RootState` already
+  const user = useAppSelector(state => state.auth)
+  const dispatch = useAppDispatch()
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-        <div>
-          {test}
-          <button onClick={()=>setTest(test+1) } > +1 </button>
-        </div>
+    <div>
+        <div>{user.userId || "userId"}</div>
+        <div>{user.email || "email"}</div>
+        <div>{user.isAuth ? "isAuth" : "Not Auth"}</div>
 
-      
-      </header>
+        <button  onClick={() => dispatch(authUserThunk())} >redux</button>
+
+
     </div>
-  );
+  )
+  // omit rendering logic
 }
 
-export default App;
+export default App
