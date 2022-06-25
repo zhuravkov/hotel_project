@@ -1,5 +1,6 @@
 python -m venv venv
 source venv/bin/activate
+venv\Scripts\activate
 
 pip install django
 pip install djangorestframework
@@ -8,9 +9,13 @@ python -m pip install django-cors-headers
 
 python manage.py startapp app_1
 
+
+
 Пересобираем проект после изменений
 npm run build
 python manage.py collectstatic
+
+python manage.py runserver 0.0.0.0:8000
 
 настраиваем CustomUser и только потом
 python manage.py makemigrations
@@ -19,3 +24,4 @@ python manage.py migrate
 python manage.py createsuperuser
 (admin@mail.ru | admin)
 user1@mail.ru | user1admin ....
+

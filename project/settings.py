@@ -65,7 +65,7 @@ ROOT_URLCONF = 'project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR/ 'app_ui/build'], # add for index (templates)
+        'DIRS': [BASE_DIR/ 'hotel_test/build'], # add for index (templates)
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -131,7 +131,7 @@ STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR/ 'static'
 STATICFILES_DIRS = (
     # Bring static from REACT to DJANGO
-    (BASE_DIR/ 'app_ui/build/static'),
+    (BASE_DIR/ 'hotel_test/build/static'),
 )
 
 
