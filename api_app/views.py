@@ -3,8 +3,8 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
 from rest_framework.decorators import api_view
 
-from api_app.models import CustomUser
-from api_app.seializers import AuthUserSerializer
+from api_app.models import Category, CustomUser
+from api_app.seializers import AuthUserSerializer, CategorySerializer
 from django.contrib.auth import authenticate, login,logout
 # Create your views here.
 
@@ -21,6 +21,17 @@ def index(request):
     print(username)
     return render (request, 'index.html', {})
 
+
+@api_view(['GET'])
+def categories_view (request):
+  try:
+    categories = Category.objects.all()
+    print(categories)
+    serializer = CategorySerializer(categories, many=True)
+    return JsonResponse({'data':serializer.data, 'resultCode': 0, 'messages': 'Success'})
+
+  except Category.DoesNotExist:
+    return JsonResponse({ 'data':{}, 'resultCode': 1, 'messages':'ERROR'})
 
 
 

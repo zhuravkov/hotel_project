@@ -1,12 +1,14 @@
 from django.urls import path
 
-from api_app.views import apiLoginView, authenticateApi
+from api_app.views import apiLoginView, authenticateApi, categories_view
 
 
 
 urlpatterns = [
     path('auth/me',  authenticateApi ),
     path('login', apiLoginView),
+    path('categories', categories_view),
+
 ]
 
 

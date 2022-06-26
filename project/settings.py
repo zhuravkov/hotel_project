@@ -24,7 +24,7 @@ SECRET_KEY = 'django-insecure-w1*3hyl2n6!_yh+7+-y-heq(@jupt#xe+vc6_nl(4%1j2%=7s0
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-ALLOWED_HOSTS = ["localhost"]
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -143,17 +143,17 @@ STATICFILES_DIRS = (
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-# #FOR WORKING ON 2 SERVERS
-# CORS_ALLOW_ALL_ORIGINS= True
-# CORS_ALLOW_CREDENTIALS= True
+#FOR WORKING ON 2 SERVERS
+CORS_ALLOW_ALL_ORIGINS= True
+CORS_ALLOW_CREDENTIALS= True
 
-# #Чтобы пропускать все запросы а не только  GET
-# CSRF_TRUSTED_ORIGINS = ['http://localhost:3000']
-# REST_FRAMEWORK = {
-#     'DEFAULT_AUTHENTICATION_CLASSES': (
-#         'rest_framework.authentication.TokenAuthentication',
-#     )
-# }
+#Чтобы пропускать все запросы а не только  GET
+CSRF_TRUSTED_ORIGINS = ['http://localhost:3000']
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    )
+}
 
 
 
