@@ -17,13 +17,13 @@ from django.contrib import admin
 from django.urls import include, path
 
 from api_app.views import index
+from django.urls import re_path
 
 
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    # DELETE
-    path('api/', include('api_app.urls')),
-    path('', index ),
+  path('admin/', admin.site.urls),
+  path('api/', include('api_app.urls')),
+  re_path(r'\/', index),
 ]

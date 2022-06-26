@@ -23,6 +23,18 @@ def index(request):
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
 @api_view(['GET'])
 def authenticateApi(request):
     # auth me проверка зарегистрирован ли вользователь
@@ -69,3 +81,5 @@ def apiLoginView(request):
         return JsonResponse({'resultCode': 0})
     else:
         return JsonResponse({'resultCode': 1, 'message':'something wrong'})
+
+

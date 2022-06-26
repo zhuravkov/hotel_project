@@ -30,3 +30,16 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
+
+#ROOMS CATEGORY
+class Category(models.Model):
+  title = models.CharField(max_length=100, verbose_name = 'Категория')
+  content = models.TextField(verbose_name = 'Описание категории')
+  image = models.ImageField(blank=True, upload_to='images/',
+								verbose_name = 'Основное изображение для категории')
+  
+  def __str__(self):
+        return self.title
+  class Meta:
+    verbose_name_plural = 'Категории'
+    verbose_name = 'Категория'

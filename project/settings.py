@@ -24,7 +24,7 @@ SECRET_KEY = 'django-insecure-w1*3hyl2n6!_yh+7+-y-heq(@jupt#xe+vc6_nl(4%1j2%=7s0
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-ALLOWED_HOSTS = ["project-django.ru"]
+ALLOWED_HOSTS = ["localhost"]
 
 
 # Application definition
@@ -159,3 +159,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # НАСТРАИВАЕМЫЙ USER
 AUTH_USER_MODEL = 'api_app.CustomUser'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
