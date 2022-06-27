@@ -17,8 +17,6 @@ def index(request):
         username = request.__dict__['user']
     except:
         username = None
-    print(session_user_id)
-    print(username)
     return render (request, 'index.html', {})
 
 
@@ -26,7 +24,6 @@ def index(request):
 def categories_view (request):
   try:
     categories = Category.objects.all()
-    print(categories)
     serializer = CategorySerializer(categories, many=True)
     return JsonResponse({'data':serializer.data, 'resultCode': 0, 'messages': 'Success'})
 

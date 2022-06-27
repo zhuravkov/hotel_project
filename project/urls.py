@@ -18,12 +18,19 @@ from django.urls import include, path
 
 from api_app.views import index
 from django.urls import re_path
-
+from django.conf.urls.static import static
+from django.conf import settings
 
 
 
 urlpatterns = [
+  path('', index),
+
   path('admin/', admin.site.urls),
   path('api/', include('api_app.urls')),
-  re_path(r'\/', index),
 ]
+
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns += [re_path(r'\/', index)]
+
