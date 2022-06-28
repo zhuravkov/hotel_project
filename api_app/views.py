@@ -1,4 +1,5 @@
 import json
+
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
 from rest_framework.decorators import api_view
@@ -24,7 +25,10 @@ def index(request):
 def categories_view (request):
   try:
     categories = Category.objects.all()
-    serializer = CategorySerializer(categories, many=True)
+    serializer_context = {
+    'request': None,
+}
+    serializer = CategorySerializer(categories, many=True, context=serializer_context)
     return JsonResponse({'data':serializer.data, 'resultCode': 0, 'messages': 'Success'})
 
   except Category.DoesNotExist:

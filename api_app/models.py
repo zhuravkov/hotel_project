@@ -44,3 +44,21 @@ class Category(models.Model):
   class Meta:
     verbose_name_plural = 'Категории'
     verbose_name = 'Категория'
+
+  def delete(self, *args, **kwargs):
+    """Удаление дополнительных изображений после удаления статьи"""
+    for ai in self.additionalimage_set.all():
+      ai.delete()
+      super().delete(*args, **kwargs)
+
+class AdditionalImage(models.Model):
+  category = models.ForeignKey(Category, on_delete = models.CASCADE,
+						related_name='additionalImg'	, verbose_name = 'Категория')
+  image = models.ImageField(upload_to='images/',
+								verbose_name = 'Изображение')
+  class Meta:
+    verbose_name_plural = 'Дополнительные иллюстрации'
+    verbose_name = 'Дополнительная иллюстрация'
+
+  # def __str__(self):
+  #       return self.image

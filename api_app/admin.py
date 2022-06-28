@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
 from .forms import CustomUserCreationForm, CustomUserChangeForm
-from .models import Category, CustomUser
+from .models import AdditionalImage, Category, CustomUser
 
 
 class CustomUserAdmin(UserAdmin):
@@ -26,6 +26,12 @@ class CustomUserAdmin(UserAdmin):
     ordering = ('email',)
 
 
-admin.site.register(Category)
+class AdditionalImageInline(admin.TabularInline):
+	model = AdditionalImage
+class CategoryAdmin(admin.ModelAdmin):
+	inlines = (AdditionalImageInline,)
+
+
+admin.site.register(Category,CategoryAdmin)
 
 admin.site.register(CustomUser, CustomUserAdmin)
