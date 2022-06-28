@@ -47,10 +47,11 @@ class Category(models.Model):
 
   def delete(self, *args, **kwargs):
     """Удаление дополнительных изображений после удаления статьи"""
-    for ai in self.additionalimage_set.all():
+    for ai in self.additionalImg.all():
       ai.delete()
       super().delete(*args, **kwargs)
 
+#MORE IMG FOR CATEGORY
 class AdditionalImage(models.Model):
   category = models.ForeignKey(Category, on_delete = models.CASCADE,
 						related_name='additionalImg'	, verbose_name = 'Категория')
@@ -60,5 +61,37 @@ class AdditionalImage(models.Model):
     verbose_name_plural = 'Дополнительные иллюстрации'
     verbose_name = 'Дополнительная иллюстрация'
 
-  # def __str__(self):
-  #       return self.image
+class Room (models.Model):
+  category = models.ForeignKey(Category, on_delete = models.CASCADE,
+						related_name='number_category'	, verbose_name = 'Категория')
+  number = models.PositiveSmallIntegerField(verbose_name="№ аппартаментов")
+  price = models.PositiveSmallIntegerField(verbose_name="Цена")
+
+  class Meta:
+    verbose_name_plural = 'Номера'
+    verbose_name = 'Номер'
+
+  def __str__(self) :
+    return "Номер " + str(self.number) + " - " + str(self.category.title)
+
+# ORDER
+class Order(models.Model):
+  room = models.ForeignKey(Room, on_delete = models.CASCADE,
+						related_name='order_room'	, verbose_name = 'Номер')
+  arrival_date = models.DateField(verbose_name="Дата заезда")
+  departure_date = models.DateField(verbose_name="Дата отъезда")
+  adult =  models.PositiveSmallIntegerField(verbose_name="Количество взрослых")
+  childeren = models.PositiveSmallIntegerField(verbose_name="Количество детей")
+  child_age = models.CharField(max_length=100, verbose_name = 'Возраст детей')
+  client_name = models.CharField(max_length=100, verbose_name = 'Имя клиента')
+  phone_regex = RegexValidator(regex=r'^((\+7)+([0-9]){10})$',message=
+	"Phone number must be entered in the format: '+999999999'. Up to 10 digits allowed.")
+  phone = models.CharField(validators=[phone_regex], max_length=12, verbose_name= 'Телефон покупателя') 
+  agreement = models.BooleanField(verbose_name="согласие на обработку данных")
+
+  class Meta:
+    verbose_name= 'Заказ'
+    verbose_name_plural= 'Заказы'
+
+  def __str__(self) :
+    return "Заказ №" + str(self.id) 

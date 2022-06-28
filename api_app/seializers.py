@@ -10,13 +10,8 @@ class AuthUserSerializer(serializers.ModelSerializer):
 
 
 
-class TrackListingField(serializers.RelatedField):
-    def to_representation(self, value):
-      return value.image
 
 class ImgSerializer(serializers.ModelSerializer):
-    # Give user's data
-  
   class Meta:
     model = AdditionalImage
     fields = ('id','image',)
