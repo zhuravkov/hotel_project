@@ -40,9 +40,11 @@ INSTALLED_APPS = [
     ########################
     'corsheaders',
     'rest_framework',
+    'django_cleanup.apps.CleanupConfig',
     ########################
     'api_app',
-    'django_cleanup.apps.CleanupConfig',
+    'api_app.booking_functions',
+    
 
 ]
 
