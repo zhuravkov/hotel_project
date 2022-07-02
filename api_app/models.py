@@ -112,8 +112,8 @@ class Order(models.Model):
 	"Phone number must be entered in the format: '+79998882255'. Up to 10 digits allowed.")
   phone = models.CharField(validators=[phone_regex], max_length=12, verbose_name= 'Телефон покупателя') 
   agreement = models.BooleanField(verbose_name="согласие на обработку данных")
-  paid = models.BooleanField(verbose_name="Заказ оплачен")
-  done = models.BooleanField(verbose_name="Заказ исполнен")
+  paid = models.BooleanField(verbose_name="Заказ оплачен", default=False)
+  done = models.BooleanField(verbose_name="Заказ исполнен", default=False)
 
   class Meta:
     verbose_name= 'Заказ'
@@ -149,7 +149,6 @@ class Order(models.Model):
       else:
         current_ratio = 1
       all_price_array.append(current_ratio*base_price)
-    
     # возвращаем сумму за период
     return round(sum(all_price_array))
    

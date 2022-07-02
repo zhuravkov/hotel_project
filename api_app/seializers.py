@@ -1,14 +1,6 @@
 from pyexpat import model
 from rest_framework import serializers
-from api_app.models import AdditionalImage, Category, CustomUser
-
-class AuthUserSerializer(serializers.ModelSerializer):
-    # Give user's data
-    class Meta:
-        model = CustomUser
-        fields = ('id','email')
-
-
+from api_app.models import AdditionalImage, Category, Order
 
 
 class ImgSerializer(serializers.ModelSerializer):
@@ -23,3 +15,13 @@ class CategorySerializer(serializers.ModelSerializer):
     model = Category
     fields = ['id', 'title', 'content', 'image', 'additionalImg']
 
+class OrderSerializer(serializers.ModelSerializer):
+
+  class Meta:
+    model = Order
+    fields = '__all__'
+
+  def validate(self, data):
+    instance = Order(**data)
+    instance.clean()
+    return data
