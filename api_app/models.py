@@ -8,6 +8,8 @@ from django.forms import ValidationError
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 
+from api_app.booking_functions.count_price import count_price
+
 
 
 from .managers import CustomUserManager
@@ -122,36 +124,17 @@ class Order(models.Model):
   def __str__(self) :
     return "Заказ №" + str(self.id)
 
-  # @property
+
   def get_Days(self):
-    return (self.departure_date - self.arrival_date).days+1
+    return (self.departure_date - self.arrival_date).days
   get_Days.short_description = 'Количество дней'
 
 
-
-
   def get_Price(self):
-    base_price = self.room.category.price
     ratio = SeasonRatio.objects.all()
-
-    each_day_of_order = []
-    delta = self.departure_date - self.arrival_date
-    # извлекаем каждый день из периода и делаем из них массив
-    for i in range(delta.days + 1):
-      each_day_of_order.append(self.arrival_date + datetime.timedelta(i))
+    current_price = count_price(self.room.category, self.arrival_date, self.departure_date, ratio)
+    return current_price
     
-    all_price_array =[]
-    # к каждому дню ищем свой коэффициент и добавляем
-    #  в массив итоговую стоимость конкретного дня
-    for day in each_day_of_order:
-      if ratio.exists:
-        current_ratio = ratio.filter( start_date__lte = day, end_date__gte=day).first().ratio
-      else:
-        current_ratio = 1
-      all_price_array.append(current_ratio*base_price)
-    # возвращаем сумму за период
-    return round(sum(all_price_array))
-   
   get_Price.short_description = 'Стоимость'
 
 
@@ -160,7 +143,7 @@ class Order(models.Model):
       if check_avalibility(self.room, self.arrival_date, self.departure_date)==False:
         raise ValidationError("Выберете другие даты или номер (на указанный период номер забронирован)")
 
-#Checking booking DATE
+#Checking booking DATE REFACTOR LATER
 def check_avalibility (room, arrival_date, departure_date):
   avail_list = []
   order_list = Order.objects.filter(room=room)
