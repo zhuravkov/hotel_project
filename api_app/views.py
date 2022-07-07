@@ -41,14 +41,14 @@ class OrderView(CreateAPIView, ListAPIView):
         # его здесь перед 1 передачей в сериализатор
         # если делать в def perform_create(self, serializer): будет ошибка
         # что room не может отсутствовать
-
+        print(self.request.data)
         # 1 переводим даты в нужный формат
         arrival_date_req=dt.datetime.strptime(self.request.data.get('arrival_date'), "%Y-%m-%d").date()
         departure_date_req=dt.datetime.strptime(self.request.data.get('departure_date'), "%Y-%m-%d").date()
         if departure_date_req<arrival_date_req:
           return JsonResponse({'data': {}, 'resultCode': 1, 'messages': 'WRONG DATES'})
         # Выбираю комнаты заданной категории
-        rooms_cat = Room.objects.filter(category__pk = self.request.data.get('category'))
+        rooms_cat = Room.objects.filter(category__id = self.request.data.get('category'))
         # Создаю множество уникальных номеров
         free_rooms_set = set()  
         # Итерирую комнаты и проверяю наличие в них заказов на указанные даты
@@ -65,7 +65,7 @@ class OrderView(CreateAPIView, ListAPIView):
         else:
           # если список пустой, сразу отдаю ответ не передавая данные в сериализатор
           print('Select anothe category or dates')
-          return JsonResponse({ 'data':{}, 'resultCode': 1, 'messages':'Select another category or dates'})
+          return JsonResponse({ 'data':{}, 'resultCode': 1, 'messages':'Выберите другую категорию или даты'})
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
@@ -87,7 +87,7 @@ def calculate_view(request):
       if departure_date_req<arrival_date_req:
         return JsonResponse({'data': {}, 'resultCode': 1, 'messages': 'WRONG DATES'})
 
-      current_category = Category.objects.get(pk=category_req)
+      current_category = Category.objects.get(id=category_req)
       ratio = SeasonRatio.objects.all()
       current_price = count_price(
           current_category, arrival_date_req, departure_date_req, ratio)
@@ -99,11 +99,8 @@ def calculate_view(request):
             if check_avalibility(room, arrival_date_req, departure_date_req):
               free_rooms_set.add(room)
       free_rooms = list(free_rooms_set)
-      if len(free_rooms)>0 :
-        avalibility = f'{len(free_rooms)} номеров доступно' 
-      else:
-        avalibility = 'Нет номеров'
-      return JsonResponse({ 'data':{'price':current_price, 'days':days, 'avalibility':avalibility},
+
+      return JsonResponse({ 'data':{'price':current_price, 'days':days, 'avalibility':len(free_rooms)},
                              'resultCode': 0, 'messages':''})
     except:
       return JsonResponse({'data': {}, 'resultCode': 1, 'messages': 'ERROR'})

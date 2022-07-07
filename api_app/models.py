@@ -124,18 +124,18 @@ class Order(models.Model):
   def __str__(self) :
     return "Заказ №" + str(self.id)
 
-
+  @property
   def get_Days(self):
     return (self.departure_date - self.arrival_date).days
-  get_Days.short_description = 'Количество дней'
+  # get_Days.short_description = 'Количество дней'
 
-
+  @property
   def get_Price(self):
     ratio = SeasonRatio.objects.all()
     current_price = count_price(self.room.category, self.arrival_date, self.departure_date, ratio)
     return current_price
     
-  get_Price.short_description = 'Стоимость'
+  # get_Price.short_description = 'Стоимость'
 
 
   def clean(self):
