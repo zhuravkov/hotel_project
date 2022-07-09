@@ -10,11 +10,15 @@ def count_price(current_category, arrival_date, departure_date, ratio):
     all_price_array = []
     # к каждому дню ищем свой коэффициент и добавляем
     #  в массив итоговую стоимость конкретного дня
+    
     for day in each_day_of_order:
-      if ratio.exists:
-        current_ratio = ratio.filter(
-            start_date__lte=day, end_date__gte=day).first().ratio
-      else:
+      if ratio.exists():
+        ratio_filter = ratio.filter(start_date__lte=day, end_date__gte=day)
+        if ratio_filter.exists():
+          current_ratio = ratio_filter.first().ratio
+        else:       
+          current_ratio = 1     
+      else:       
         current_ratio = 1
       all_price_array.append(current_ratio*current_category.price)
     # возвращаем сумму за период

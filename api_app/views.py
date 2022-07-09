@@ -6,9 +6,10 @@ from rest_framework.response import Response
 from django.http import JsonResponse
 from django.shortcuts import render
 from rest_framework.decorators import api_view
+from api_app.booking_functions.availability import check_avalibility
 from api_app.booking_functions.count_price import count_price
 
-from api_app.models import Category, Order, Room, SeasonRatio, check_avalibility
+from api_app.models import Category, Order, Room, SeasonRatio
 from api_app.seializers import CategorySerializer, OrderSerializer
 
 from rest_framework.generics import CreateAPIView, ListAPIView
@@ -41,7 +42,6 @@ class OrderView(CreateAPIView, ListAPIView):
         # его здесь перед 1 передачей в сериализатор
         # если делать в def perform_create(self, serializer): будет ошибка
         # что room не может отсутствовать
-        print(self.request.data)
         # 1 переводим даты в нужный формат
         arrival_date_req=dt.datetime.strptime(self.request.data.get('arrival_date'), "%Y-%m-%d").date()
         departure_date_req=dt.datetime.strptime(self.request.data.get('departure_date'), "%Y-%m-%d").date()
@@ -64,7 +64,6 @@ class OrderView(CreateAPIView, ListAPIView):
           request.data['room'] = booking_room.pk
         else:
           # если список пустой, сразу отдаю ответ не передавая данные в сериализатор
-          print('Select anothe category or dates')
           return JsonResponse({ 'data':{}, 'resultCode': 1, 'messages':'Выберите другую категорию или даты'})
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -89,11 +88,14 @@ def calculate_view(request):
 
       current_category = Category.objects.get(id=category_req)
       ratio = SeasonRatio.objects.all()
+
       current_price = count_price(
           current_category, arrival_date_req, departure_date_req, ratio)
+          
       days = (departure_date_req - arrival_date_req).days
       # REMAKE DUBLICATE ORDER VIEW
       rooms_cat = Room.objects.filter(category__pk=current_category.pk)
+
       free_rooms_set = set()
       for room in rooms_cat:
             if check_avalibility(room, arrival_date_req, departure_date_req):

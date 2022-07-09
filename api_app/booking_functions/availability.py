@@ -8,4 +8,5 @@ def check_avalibility (room, arrival_date, departure_date):
       avail_list.append(True)
     else:
       avail_list.append(False)
+
   return all(avail_list)

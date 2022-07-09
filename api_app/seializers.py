@@ -13,7 +13,7 @@ class CategorySerializer(serializers.ModelSerializer):
   additionalImg = ImgSerializer( read_only=True, many=True)
   class Meta:
     model = Category
-    fields = ['id', 'title', 'content', 'image', 'additionalImg']
+    fields = ['id', 'title', 'content', 'image', 'category_slug', 'additionalImg']
 
 class RoomSerializer(serializers.ModelSerializer):
   class Meta:

@@ -31,7 +31,9 @@ class CustomUserAdmin(UserAdmin):
 class AdditionalImageInline(admin.TabularInline):
 	model = AdditionalImage
 class CategoryAdmin(admin.ModelAdmin):
-	inlines = (AdditionalImageInline,)
+  inlines = (AdditionalImageInline,)
+  prepopulated_fields = {'category_slug': ('title',)}
+  model = Category
 
 
 class OrderInline(admin.TabularInline):

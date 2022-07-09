@@ -1,4 +1,5 @@
 import datetime
+import os
 from django.core.validators import RegexValidator
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
@@ -37,13 +38,17 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
 
+# Задает путь к файлу изображения
+def upload_path_handler(instance, filename):
+    return "{category}/{file}".format(category=instance.category.category_slug, file=filename)
 #ROOMS CATEGORY
 class Category(models.Model):
   title = models.CharField(max_length=100, verbose_name = 'Категория')
   content = models.TextField(verbose_name = 'Описание категории')
   price = models.PositiveSmallIntegerField(verbose_name="Цена")
-  image = models.ImageField(blank=True, upload_to='images/',
+  image = models.ImageField(blank=True, upload_to=upload_path_handler,
 								verbose_name = 'Основное изображение для категории')
+  category_slug = models.SlugField('URL', max_length=70)
   
   def __str__(self):
         return self.title
@@ -58,17 +63,18 @@ class Category(models.Model):
       ai.delete()
       super().delete(*args, **kwargs)
 
+
 #MORE IMG FOR CATEGORY
 class AdditionalImage(models.Model):
   category = models.ForeignKey(Category, on_delete = models.CASCADE,
 						related_name='additionalImg'	, verbose_name = 'Категория')
-  image = models.ImageField(upload_to='images/',
+  image = models.ImageField(upload_to=upload_path_handler,
 								verbose_name = 'Изображение')
   class Meta:
     verbose_name_plural = 'Дополнительные иллюстрации'
     verbose_name = 'Дополнительная иллюстрация'
 
-#SEASON RATIO TEST
+#SEASON RATIO
 class SeasonRatio(models.Model):
   start_date = models.DateField(verbose_name="Начало")
   end_date = models.DateField(verbose_name="Конец")
@@ -77,10 +83,21 @@ class SeasonRatio(models.Model):
                          max_digits = 3,
                          decimal_places = 2,
                         )
-
-
   def __str__(self) :
     return f'{self.start_date} - {self.end_date} - коэффициент {self.ratio}'
+
+  def clean(self):
+
+    start= SeasonRatio.objects.filter(start_date__lte=self.start_date, end_date__gte=self.start_date)
+    end = SeasonRatio.objects.filter(start_date__lte=self.end_date, end_date__gte=self.end_date)
+
+    if start.exclude(pk=self.pk).exists():
+        raise ValidationError({'start_date': _('Выберете другую дату')})
+    if end.exclude(pk=self.pk).exists():
+        raise ValidationError({'end_date': _('Выберете другую дату')})
+    if self.end_date<self.start_date:
+      raise ValidationError({'end_date': _('Не может быть меньше начальной даты')})
+
 
   class Meta:
     verbose_name_plural = 'Сезонные коэффициенты'
@@ -129,24 +146,25 @@ class Order(models.Model):
     return (self.departure_date - self.arrival_date).days
   # get_Days.short_description = 'Количество дней'
 
+
   @property
   def get_Price(self):
     ratio = SeasonRatio.objects.all()
     current_price = count_price(self.room.category, self.arrival_date, self.departure_date, ratio)
-    return current_price
+    return current_price 
     
   # get_Price.short_description = 'Стоимость'
 
 
   def clean(self):
-    if not Order.objects.filter(pk=self.pk).exists():
-      if check_avalibility(self.room, self.arrival_date, self.departure_date)==False:
+    # if not Order.objects.filter(pk=self.pk).exists():
+      if check_avalibility1(self.room, self.arrival_date, self.departure_date,self.pk)==False:
         raise ValidationError("Выберете другие даты или номер (на указанный период номер забронирован)")
 
-#Checking booking DATE REFACTOR LATER
-def check_avalibility (room, arrival_date, departure_date):
+#Checking booking DATE REFACTOR LATER 
+def check_avalibility1 (room, arrival_date, departure_date, pk):
   avail_list = []
-  order_list = Order.objects.filter(room=room)
+  order_list = Order.objects.filter(room=room).exclude(pk=pk)
   for order in order_list:
     if order.arrival_date > departure_date or order.departure_date < arrival_date:
       avail_list.append(True)
