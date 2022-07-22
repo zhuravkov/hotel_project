@@ -11,9 +11,19 @@ class ImgSerializer(serializers.ModelSerializer):
 
 class CategorySerializer(serializers.ModelSerializer):
   additionalImg = ImgSerializer( read_only=True, many=True)
+  # photo_url = serializers.SerializerMethodField()
+
   class Meta:
     model = Category
-    fields = ['id', 'title', 'content', 'image', 'category_slug', 'additionalImg']
+    fields = ['id', 'title', 'content', 'image', 'category_slug', 'additionalImg', 'price']
+
+  # def get_photo_url(self, obj):
+  #     request = self.context.get('request')
+  #     photo_url = obj.image
+  #     print(photo_url)
+  #     return request.build_absolute_uri(photo_url)
+
+
 
 class RoomSerializer(serializers.ModelSerializer):
   class Meta:

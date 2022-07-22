@@ -40,7 +40,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
 # Задает путь к файлу изображения
 def upload_path_handler(instance, filename):
-    return "{category}/{file}".format(category=instance.category.category_slug, file=filename)
+    return "images/{category}/{file}".format(category=instance.category.category_slug, file=filename)
 #ROOMS CATEGORY
 class Category(models.Model):
   title = models.CharField(max_length=100, verbose_name = 'Категория')

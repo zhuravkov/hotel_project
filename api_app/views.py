@@ -24,7 +24,7 @@ def categories_view (request):
   try:
     categories = Category.objects.all()
     serializer_context = {
-    'request': None,
+    'request': request,
 }
     serializer = CategorySerializer(categories, many=True, context=serializer_context)
     return JsonResponse({'data':serializer.data, 'resultCode': 0, 'messages': 'Success'})
